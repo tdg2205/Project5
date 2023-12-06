@@ -4,8 +4,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Customer extends User{
-    private int purchaseCount;
-    private ArrayList<Product> purchasedItems;
+    private static int purchaseCount;
+    private static ArrayList<Product> purchasedItems;
+    private static ArrayList<Product> shoppingCart;
+
 
     public Customer(String email, String password, String username) {
         super(email, password, username, false);
@@ -20,6 +22,10 @@ public class Customer extends User{
         this.purchasedItems = purchasedItems;
     }
 
+    public static void setShoppingCart(ArrayList<Product> shoppingCart) {
+        Customer.shoppingCart = shoppingCart;
+    }
+
     public int getPurchaseCount() {
         return purchaseCount;
     }
@@ -28,15 +34,37 @@ public class Customer extends User{
         return purchasedItems;
     }
 
-    public void purchaseProduct(Product product) {
+    public  ArrayList<Product> getShoppingCart() {
+        return shoppingCart;
+    }
+    public void addToShoppingCart(Product product) {
+        shoppingCart.add(product);
 
     }
+    public void purchaseProduct(Product product, int quantity) {
+        if (product.getQuantity() >= quantity) {
+            product.setQuantity(product.getQuantity() - quantity);
+            purchasedItems.add(product);
+            purchaseCount++;
+            product.setSales(+quantity);
+            for (Store store:Marketplace.getStores()) {
+                if (store.getStoreName().equals(product.getProductStoreName())) {
+                    store.getPurchases().add(Customer);
+                }
+            }
+            System.out.println("Purchase successful! " +
+                    quantity + " units of " + product.getProductName() +
+                    " bought for " + (quantity * product.getPrice()));
+        } else {
+            System.out.println("Insufficient quantity available.");
+        }
+    }
 
-    public List<Product> searchProducts(List<Product> marketplace, String searchTerm) {
-        List<Product> matchingProducts = new ArrayList<>();
+    public ArrayList<Product> searchProducts(List<Product> marketplace, String searchTerm) {
+        ArrayList<Product> matchingProducts = new ArrayList<>();
         for (Product product : marketplace) {
-            if (product.getItemName().toLowerCase().contains(searchTerm.toLowerCase()) ||
-                    product.getStore().getStoreName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+            if (product.getProductName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                    product.getProductStoreName().toLowerCase().contains(searchTerm.toLowerCase()) ||
                     product.getDescription().toLowerCase().contains(searchTerm.toLowerCase())) {
                 matchingProducts.add(product);
             }
@@ -44,15 +72,6 @@ public class Customer extends User{
         return matchingProducts;
     }
 
-    public void sortQuantity() {
-        Comparator<Product> quantityComparator = Comparator.comparingInt(Product::getQuantity);
-        ArrayList<Product> sortedProducts = Collections.sort(Marketplace.getProducts(),quantityComparator);
-    }
 
-    public void sortPrice() {
-        Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
-        ArrayList<Product> sortedProducts = Collections.sort(Marketplace.getProducts(),priceComparator);
-
-    }
 
 }
