@@ -3,6 +3,8 @@ public class Store {
     private ArrayList<Product> storeProducts;
     private  String storeName;
     private User owner;
+    private ArrayList<Customer> purchases;
+
 
     public void setProducts(ArrayList<Product> products) {
         this.storeProducts = products;
@@ -16,6 +18,10 @@ public class Store {
         this.owner = owner;
     }
 
+    public void setPurchases(ArrayList<Customer> purchases) {
+        this.purchases = purchases;
+    }
+
     public ArrayList<Product> getProducts() {
         return storeProducts;
     }
@@ -26,6 +32,10 @@ public class Store {
 
     public User getOwner() {
         return owner;
+    }
+
+    public ArrayList<Customer> getPurchases() {
+        return purchases;
     }
 
     public Store(ArrayList<Product> products, String storeName, User owner) {
