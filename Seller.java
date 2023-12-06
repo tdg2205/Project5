@@ -1,24 +1,24 @@
 import java.util.ArrayList;
 
 public class Seller extends User{
-    public ArrayList<Store> yourStores;
+    public static ArrayList<Store> yourStores;
 
     public Seller(String email, String password, String username) {
         super(email, password, username, true);
-        this.yourStores = new ArrayList<Store>();
+        yourStores = new ArrayList<Store>();
     }
 
     public void setStores(ArrayList<Store> stores) {
-        this.yourStores = stores;
+        yourStores = stores;
     }
 
-    public ArrayList<Store> getYourStores() {
+    public static ArrayList<Store> getYourStores() {
         return yourStores;
     }
 
 
-    public static void createYourStore(Store store){
-        this.yourStores.add(store);
+    public void createYourStore(Store store){
+        yourStores.add(store);
     }
     public static void addProduct(Product product, Store store) {
         store.getProducts().add(product);
