@@ -16,6 +16,7 @@ class Product {
     private int quantity;
     private double price;
     private String productStoreName;
+    private int sales;
 
     public void setProductName(String productName) {
         this.productName = productName;
@@ -36,6 +37,10 @@ class Product {
 
     public void setProductStoreName(String productStoreName) {
         this.productStoreName = productStoreName;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
     }
 
     public Product(String productName, String description, int quantity, double price, String productStoreName) {
@@ -65,5 +70,9 @@ class Product {
 
     public String getProductStoreName() {
         return productStoreName;
+    }
+
+    public int getSales() {
+        return sales;
     }
 }
