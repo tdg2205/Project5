@@ -172,37 +172,44 @@ public class Marketplace {
         boolean validThree = true;
         System.out.println("Enter email");
         email = s.nextLine();
-        for (User user : users) {
-            if (user.getEmail().equals(email)) {
-                System.out.println("Email already in use. Login or try a different email");
-                return;
-            } else if (!email.contains("@") || !email.contains(".") || email.contains(",")) {
-                System.out.println("Email not valid. Please try again or login");
-                return;
+        if (users != null) {
+            for (User user : users) {
+                if (user.getEmail().equals(email)) {
+                    System.out.println("Email already in use. Login or try a different email");
+                    return;
+                }
             }
+        }
+         if (!email.contains("@") || !email.contains(".") || email.contains(",")) {
+            System.out.println("Email not valid. Please try again or login");
+            return;
         }
         while (valid) {
             System.out.println("Please enter desired username");
             username = s.nextLine();
-            for (User user : users) {
-                if (user.getUsername().equals(username)) {
-                    System.out.println("Username already in use reenter username;");
-                } else if (username.contains(",")) {
+            if (users != null) {
+                for (User user : users) {
+                    if (user.getUsername().equals(username)) {
+                        System.out.println("Username already in use reenter username;");
+                    }
+                }
+            }
+             if (username.contains(",")) {
                     System.out.println("Username cannot contain a ',' symbol");
                 } else {
                     System.out.println("Valid username");
                     valid = false;
                 }
-            }
         }
         while (validTwo) {
             System.out.println("Please enter desired password");
             password = s.nextLine();
             if (password.contains(",")) {
                 System.out.println("Password cannot contain a ',' symbol");
+            } else {
+                System.out.println("Valid password");
+                validTwo = false;
             }
-            System.out.println("Valid password");
-            validTwo = false;
         }
         while (validThree) {
             System.out.println("Please enter desired role:Seller/Customer");
@@ -216,7 +223,10 @@ public class Marketplace {
                 System.out.println("Enter valid role");
             }
         }
-        Marketplace.getUsers().add(new User(email, password, username, seller));
+        if (users == null) {
+            users = new ArrayList<>();
+        }
+        users.add(new User(email, password, username, seller));
         currentUser = new User(email, password, username, seller);
     }
 
@@ -271,7 +281,14 @@ public class Marketplace {
     }
 
     public void sellerMenu(Scanner s) {
-        Seller currentSeller = (Seller) currentUser;
+        Seller currentSeller = null;
+        if (currentUser instanceof Seller) {
+            currentSeller = (Seller) currentUser;
+
+            // Rest of your sellerMenu logic
+        } else {
+            System.out.println("Invalid user type for sellerMenu");
+        }
         String storeName = "";
         String productName = "";
         String productDescription = "";
@@ -289,6 +306,7 @@ public class Marketplace {
         System.out.print("Enter your choice: ");
         int choice = s.nextInt();
         s.nextLine();
+
         switch (choice) {
             case 1:
                 System.out.println("enter desired store name");
@@ -445,7 +463,14 @@ public class Marketplace {
     }
 
     public void customerMenu(Scanner s) {
-        Customer currentCustomer = (Customer) currentUser;
+        Customer currentCustomer = null;
+        if (currentUser instanceof Customer) {
+            currentCustomer = (Customer) currentUser;
+
+            // Rest of your sellerMenu logic
+        } else {
+            System.out.println("Invalid user type for sellerMenu");
+        }
         System.out.println("Customer Menu:");
         System.out.println("1. View Marketplace");
         System.out.println("2. Select Product");
