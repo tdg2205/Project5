@@ -40,6 +40,7 @@ public class Marketplace {
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         boolean isRunning = true;
+        Marketplace marketplace = new Marketplace();
         System.out.println("Loading Servers...");
         try (BufferedReader br = new BufferedReader(new FileReader("UserDatabase.txt"))) {
             String line;
@@ -103,9 +104,9 @@ public class Marketplace {
                 }
             } else {
                 if (currentUser.isSeller()) {
-                    sellerMenu(s);
+                    marketplace.sellerMenu(s);
                 } else if (!currentUser.isSeller()) {
-                    customerMenu(s);
+                    marketplace.customerMenu(s);
                 }
             }
         }
@@ -254,7 +255,8 @@ public class Marketplace {
         if (Marketplace.getProducts() == null) {
             System.out.println("No products to sort");
         } else {
-            ArrayList<Product> sortedProducts = Collections.sort(Marketplace.getProducts(), quantityComparator);
+            Collections.sort(Marketplace.getProducts(), quantityComparator);
+            System.out.println("Products sorted by quantity.");
         }
     }
 
@@ -263,11 +265,12 @@ public class Marketplace {
         if (Marketplace.getProducts() == null) {
             System.out.println("No products to sort");
         } else {
-            ArrayList<Product> sortedProducts = Collections.sort(Marketplace.getProducts(), priceComparator);
+            Collections.sort(Marketplace.getProducts(), priceComparator);
+            System.out.println("Products sorted by price.");
         }
     }
 
-    public static void sellerMenu(Scanner s) {
+    public void sellerMenu(Scanner s) {
         Seller currentSeller = (Seller) currentUser;
         String storeName = "";
         String productName = "";
@@ -441,7 +444,7 @@ public class Marketplace {
         }
     }
 
-    public static void customerMenu(Scanner s) {
+    public void customerMenu(Scanner s) {
         Customer currentCustomer = (Customer) currentUser;
         System.out.println("Customer Menu:");
         System.out.println("1. View Marketplace");
@@ -501,12 +504,10 @@ public class Marketplace {
                 //not working cant figure out why
                 switch (sortChoice) {
                     case 1:
-                        Marketplace.sortQuantity;
-                        sortedProducts;
+                        sortQuantity();
                         break;
                     case 2:
-                        Marketplace.sortPrice;
-                        sortedProducts;
+                        sortPrice();
                         break;
                     default:
                         System.out.println("Please enter 1 or 2");
