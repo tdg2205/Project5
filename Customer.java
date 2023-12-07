@@ -49,7 +49,7 @@ public class Customer extends User{
             product.setSales(+quantity);
             for (Store store:Marketplace.getStores()) {
                 if (store.getStoreName().equals(product.getProductStoreName())) {
-                    store.getPurchases().add(Customer);
+                    store.getPurchases().add(this);
                 }
             }
             System.out.println("Purchase successful! " +
@@ -59,7 +59,6 @@ public class Customer extends User{
             System.out.println("Insufficient quantity available.");
         }
     }
-
     public ArrayList<Product> searchProducts(List<Product> marketplace, String searchTerm) {
         ArrayList<Product> matchingProducts = new ArrayList<>();
         for (Product product : marketplace) {
