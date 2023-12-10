@@ -5,97 +5,49 @@ import java.util.*;
 
 public class Marketplace {
 
-    private static ArrayList<Product> products;
-    private static ArrayList<Store> stores;
-    private static ArrayList<User> users;
-    private static User currentUser;
+    private  ArrayList<Product> products;
+    private  ArrayList<Store> stores;
+    private  ArrayList<User> users;
 
-    public static void declare()
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    private  User currentUser;
+
+    public  Marketplace()
     {
         products = new ArrayList<>();
         stores = new ArrayList<>();
         users = new ArrayList<>();
     }
-    public static void setProducts(ArrayList<Product> products) {
-        Marketplace.products = products;
+    public  void setProducts(ArrayList<Product> products) {
+        this.products = products;
     }
 
-    public static void setStores(ArrayList<Store> stores) {
-        Marketplace.stores = stores;
+    public  void setStores(ArrayList<Store> stores) {
+        this.stores = stores;
     }
 
-    public static void setUsers(ArrayList<User> users) {
-        Marketplace.users = users;
+    public  void setUsers(ArrayList<User> users) {
+        this.users = users;
     }
 
-    public static ArrayList<Product> getProducts() {
+    public  ArrayList<Product> getProducts() {
         return products;
     }
 
-    public static ArrayList<Store> getStores() {
+    public   ArrayList<Store> getStores() {
         return stores;
     }
 
-    public static ArrayList<User> getUsers() {
+    public   ArrayList<User> getUsers() {
         return users;
     }
 
-    public static void main(String[] args) {
-        declare();
-        Scanner s = new Scanner(System.in);
-        boolean isRunning = true;
-        System.out.println("Loading Servers...");
-        try (BufferedReader br = new BufferedReader(new FileReader("UserDatabase.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] productData = line.split(",");
-                String email = productData[0];
-                String password = productData[1];
-                String username = productData[2];
-                boolean seller = Boolean.parseBoolean(productData[3]);
-                User user = new User(email, password, username, seller);
-                Marketplace.getUsers().add(user);
-                System.out.println("Users Loaded");
-            }
-        } catch (IOException e) {
-            System.out.println(" No previous users");
-        }
-        readProduct();
-        readStore();
-        while (isRunning) {
-            if (currentUser == null) {
-                System.out.println("Welcome to the Marketplace!");
-                System.out.println("1. Login");
-                System.out.println("2. Create Account");
-                System.out.println("3. Exit");
-                System.out.print("Enter your choice: ");
-                int choice = s.nextInt();
-                s.nextLine();
-                switch (choice) {
-                    case 1 -> login(s);
-                    case 2 -> create(s);
-                    case 3 -> {
-                        isRunning = false;
-                        System.out.println("Exiting the Marketplace. Goodbye!");
-                    }
-                    default -> System.out.println("Invalid choice. Please try again.");
-                }
-            } else {
-                if (currentUser.isSeller()) {
-                    sellerMenu(s);
-                    currentUser = null;
-                }
-                else {
-                    customerMenu(s);
-                    currentUser = null;
-                }
 
-            }
-        }
 
-    }
-
-    public static void readProduct() {
+    public   void readProduct() {
         try (BufferedReader br = new BufferedReader(new FileReader("ProductDatabase.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -106,7 +58,7 @@ public class Marketplace {
                 double price = Double.parseDouble(productData[3]);
                 String storeName = productData[4];
                 Product product = new Product(name, description, quantity, price, storeName);
-                Marketplace.getProducts().add(product);
+                this.getProducts().add(product);
                 System.out.println("Products Loaded");
             }
         } catch (IOException e) {
@@ -114,484 +66,291 @@ public class Marketplace {
         }
     }
 
-    public static void readStore() {
-        try (BufferedReader br = new BufferedReader(new FileReader("StoreDatabase.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] productData = line.split(",");
-                String userUsername = productData[0];
-                String storeName = productData[1];
-                User tempUser = null;
-                ArrayList<Product> tempStoreProducts = null;
-                for (Product product : products) {
-                    if (storeName.equals(product.getProductStoreName())) {
-                        tempStoreProducts.add(product);
-                    }
-                }
-                for (User user : users) {
-                    if (userUsername.equals(user.getUsername())) {
-                        tempUser = user;
-                    }
-                }
-                Store store = new Store(tempStoreProducts, storeName, tempUser);
-                Marketplace.getStores().add(store);
-                System.out.println("Stores Loaded");
-            }
-        } catch (IOException e) {
-            System.out.println("No previous stores");
-        }
-    }
 
 
-    private static void create(Scanner s) {
-        String email = "";
-        String password = "";
-        String username = "";
-        String role = "";
-        boolean seller = true;
-        boolean valid = true;
-        boolean validTwo = true;
-        boolean validThree = true;
-        System.out.println("Enter email");
-        email = s.nextLine();
+    public   boolean create(String email, String username, String password, boolean seller ) {
+
         if (!email.contains("@") || !email.contains(".") || email.contains(",")) {
             System.out.println("Email not valid. Please try again or login");
-            return;
+            return false;
         }
-
         for (User user : users) {
             if (user.getEmail().equals(email)) {
                 System.out.println("Email already in use. Login or try a different email");
-                return;
+                return false;
             }
-        }
-        while (valid) {
-            System.out.println("Please enter  username");
-            username = s.nextLine();
-            if (username.contains(",")) {
-                System.out.println("Username cannot contain a ',' symbol");
-                continue;
-            }
-            for (User user : users) {
-                if (user.getUsername().equals(username)) {
-                    System.out.println("Username already in use!!!");
-                    valid = false;
-                    break;
-                }
-            }
-            valid = !valid;
+        } 
 
+        if (username.contains(",")) {
+            System.out.println("Username cannot contain a ',' symbol");
+            return false;
         }
-        while (validTwo) {
-            System.out.println("Please enter desired password");
-            password = s.nextLine();
-            if (password.contains(",")) {
-                System.out.println("Password cannot contain a ',' symbol");
-                continue;
-            }
-            System.out.println("Valid password");
-            validTwo = false;
-        }
-        while (validThree) {
-            System.out.println("Please enter desired role:Seller/Customer");
-            role = s.nextLine();
-            if (role.equalsIgnoreCase("customer")) {
-                seller = false;
-                validThree = false;
-            } else if (role.equalsIgnoreCase("seller")) {
-                validThree = false;
-            } else {
-                System.out.println("Enter valid role");
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                System.out.println("Username already in use!!!");
+                return false;
+
             }
         }
+
+        if (password.contains(",")) {
+            System.out.println("Password cannot contain a ',' symbol");
+            return false;
+        }
+        System.out.println("Valid password");
+
+       
 
         if (seller) {
             currentUser = new Seller(email, password, username);
-            Marketplace.getUsers().add(new Seller(email, password, username));
+            this.getUsers().add(new Seller(email, password, username));
 
         }
         else {
             currentUser = new Customer(email, password, username);
-            Marketplace.getUsers().add(new Customer(email, password, username));
+            this.getUsers().add(new Customer(email, password, username));
         }
-    }
+        return true;
+    } 
 
-    private static void login(Scanner s) {
+    public String login(String username, String password) {
         User loginUser = null;
-        boolean valid = true;
-        boolean validTwo = true;
-        while (valid) {
-            System.out.println("Enter username or email");
-            String account = s.nextLine();
-            for (User user : users) {
-                if (user.getUsername().equals(account) || user.getEmail().equals(account)) {
-                    System.out.println("Account found");
-                    loginUser = user;
-                    valid = false;
-                    break;
-                }
-            }
-            if (valid)
-                System.out.println("Invalid Username or Email");
-        }
-        while (validTwo) {
-            System.out.println("Enter password");
-            String password = s.nextLine();
-            if (loginUser.getPassword().equals(password)) {
-                System.out.println("Logged In");
-                currentUser = loginUser;
-                validTwo = false;
-            } else {
-                System.out.println("Wrong password. Please retry");
+        boolean valid = false;
+        for (User user : users) {
+            if (user.getUsername().equals(username) || user.getEmail().equals(username)) {
+                System.out.println("Account found");
+                loginUser = user;
+                valid = true;
+                break;
             }
         }
-    }
+        if (!valid) {
+            System.out.println("Invalid Username or Email");
+            return "failure";
+        }
+        if (loginUser.getPassword().equals(password)) {
+            System.out.println("Logged In");
+            currentUser = loginUser;
+            if (currentUser.isSeller())
+                return "seller";
+            else
+                return "customer";
+        } else {
+            System.out.println("Wrong password. Please retry");
+            return "failure";
+        }
+    } 
 
 
+    
 
-    public void sortQuantity() {
+    public boolean sortQuantity() {
         Comparator<Product> quantityComparator = Comparator.comparingInt(Product::getQuantity);
-        if (Marketplace.getProducts() == null) {
-            System.out.println("No products to sort");
+        if (this.getProducts() == null) {
+            return false;
         } else {
-            Collections.sort(Marketplace.getProducts(), quantityComparator);
+            List<Product> products = this.getProducts();
+            products.sort(quantityComparator);
         }
-    }
+        return true;
+    } 
 
-    public void sortPrice() {
+    public   boolean sortPrice() {
         Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
-        if (Marketplace.getProducts() == null) {
-            System.out.println("No products to sort");
+        if (this.getProducts() == null) {
+            return false;
         } else {
-            Collections.sort(Marketplace.getProducts(), priceComparator);
+            List<Product> products = this.getProducts();
+            products.sort(priceComparator);
         }
-    }
+        return true;
+    } 
 
-    public static void displayStores(Seller currentSeller)
+
+    public void createStore(String storename)
     {
-        System.out.println("Enter store name from the available stores");
-        for (Store st :currentSeller.getStores()) {
-            System.out.println(st.getStoreName());
-        }
-    }
-    public static void sellerMenu(Scanner s) {
+        ArrayList<Product> storeProducts = new ArrayList<Product>();
+
+        Store store = new Store(storeProducts, storename, currentUser);
         Seller currentSeller = (Seller) currentUser;
-        String storeName = "";
-        String productName = "";
-        String productDescription = "";
-        int productquantity = 0;
-        double productPrice = 0;
-        System.out.println("Seller Menu:");
-        System.out.println("1. Create Store");
-        System.out.println("2. Add Product");
-        System.out.println("3. Remove Product");
-        System.out.println("4. Edit Product");
-        System.out.println("5. View Sales");
-        System.out.println("6. View Statistics");
-        System.out.println("7. Logout");
-        System.out.print("Enter your choice: ");
-        int choice = s.nextInt();
-        s.nextLine();
-        switch (choice) {
-            case 1:
-                System.out.println("enter desired store name");
-                storeName = s.nextLine();
-                System.out.println("Please enter the name of first product for store");
-                productName = s.nextLine();
-                System.out.println("Please enter the description of first product for store");
-                productDescription = s.nextLine();
-                System.out.println("Please enter the quantity of first product for store");
-                productquantity = s.nextInt();
-                s.nextLine();
-                System.out.println("Please enter the price of first product for store");
-                productPrice = s.nextDouble();
-                s.nextLine();
-                Product firstProduct = new Product(productName, productDescription,
-                        productquantity, productPrice, storeName);
-                Marketplace.products.add(firstProduct);
-                ArrayList<Product> storeProducts = new ArrayList<Product>();
-                storeProducts.add(firstProduct);
-                Store store = new Store(storeProducts, storeName, currentUser);
-                currentSeller.createYourStore(store);
-                System.out.println("Store and first product created");
-                break;
-            case 2:
-                displayStores(currentSeller);
-                storeName = s.nextLine();
-                System.out.println("Please enter the name of product for store");
-                productName = s.nextLine();
-                System.out.println("Please enter the description of product for store");
-                productDescription = s.nextLine();
-                System.out.println("Please enter the quantity of product for store");
-                productquantity = s.nextInt();
-                s.nextLine();
-                System.out.println("Please enter the price of product for store");
-                productPrice = s.nextDouble();
-                s.nextLine();
-                Product product = new Product(productName, productDescription,
-                        productquantity, productPrice, storeName);
-                Marketplace.products.add(product);
-                for (Store wantedStore : Seller.getYourStores()) {
-                    if (wantedStore.getStoreName().equals(storeName)) {
-                        wantedStore.getProducts().add(product);
-                    }
-                }
-                System.out.println("Product added to desired store ");
-                break;
-            case 3:
-                Store removeStore = null;
-                Product removeProduct = null;
-                displayStores(currentSeller);
-                storeName = s.nextLine();
-                System.out.println("Enter name of product to remove");
-                productName = s.nextLine();
-                boolean found = false;
-                for (Store wantedStore : Seller.getYourStores()) {
-                    if (wantedStore.getStoreName().equals(storeName)) {
-                        removeStore = wantedStore;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    System.out.println("Sorry!! Store name mismatch");
-                    break;
-                }
-                for (Product wantedProduct : removeStore.getProducts()) {
-                    if (wantedProduct.getProductName().equals(productName)) {
-                        removeProduct = wantedProduct;
-                    }
-                }
-                Seller.removeProduct(removeProduct, removeStore);
-                System.out.println("Product removed");
-                break;
-            case 4:
-                Store editStore = null;
-                Product editProduct = null;
-
-                displayStores(currentSeller);
-                storeName = s.nextLine();
-                System.out.println("Enter name of product to remove");
-                productName = s.nextLine();
-                found = false;
-                for (Store wantedStore : Seller.getYourStores()) {
-                    if (wantedStore.getStoreName().equals(storeName)) {
-                        editStore = wantedStore;
-                        found = true;
-                    }
-
-                }
-                if (!found)
-                {
-                    System.out.println("Sorry!! wrong store name");
-                    break;
-                }
-                found = false;
-                for (Product wantedProduct : editStore.getProducts()) {
-                    if (wantedProduct.getProductName().equals(productName)) {
-                        editProduct = wantedProduct;
-                        found = true;
-                        break;
-
-                    }
-                }
-                if(!found)
-                {
-                    System.out.println("sorry!!! product not found");
-                    break;
-                }
-                System.out.println("Please enter the new name of product for store");
-                productName = s.nextLine();
-                System.out.println("Please enter the new description of product for store");
-                productDescription = s.nextLine();
-                System.out.println("Please enter the new quantity of product for store");
-                productquantity = s.nextInt();
-                s.nextLine();
-                System.out.println("Please enter the new price of product for store");
-                productPrice = s.nextDouble();
-                s.nextLine();
-                Seller.editProduct(editProduct, editStore, productName,
-                        productDescription, productquantity, productPrice);
-                System.out.println("Product edited");
-                break;
-            case 5:
-                for (Store aStore : Seller.getYourStores()) {
-                    System.out.println("store name: " + aStore.getStoreName());
-                    for (Customer aCustomer : aStore.getPurchases()) {
-                        System.out.println("\n Purchase By: " + aCustomer.getUsername());
-                        for (Product aProduct : aCustomer.getPurchasedItems()) {
-                            double revenue = (aCustomer.getPurchaseCount() * aProduct.getPrice());
-                            System.out.println("\nMoney made: " + revenue);
-                        }
-                    }
-                }
-                System.out.println("All sales");
-                break;
-            case 6:
-                System.out.println("1. Customer Statistics");
-                System.out.println("2. Product Statistics");
-                int statisticChoice = s.nextInt();
-                s.nextLine();
-                switch (statisticChoice) {
-                    case 1:
-                        for (Store aStore : Seller.getYourStores()) {
-                            System.out.println("Store name: " + aStore.getStoreName());
-                            for (Customer aCustomer : aStore.getPurchases()) {
-                                System.out.println("\n Purchase Amount: " + aCustomer.getPurchaseCount());
-                            }
-                            System.out.println("All Customer Statistics");
-                            break;
-                        }
-                    case 2:
-                        for (Store aStore : Seller.getYourStores()) {
-                            System.out.println("Store name: " + aStore.getStoreName());
-                            for (Product aProduct : aStore.getProducts()) {
-                                System.out.println("\nProduct Name: " + aProduct.getProductName()
-                                        + "\nProduct Sales: " + aProduct.getSales());
-                            }
-                        }
-                        System.out.println("All Product Statistics");
-                        break;
-                }
-                break;
-
-
-            case 7:
-                System.out.println("Logged out successfully!");
-                return;
-
-            default:
-                System.out.println("Enter a number 1 through 8");
-                break;
+        currentSeller.createYourStore(store);
+    }
+    public boolean editProduct(String storeName, String productName, String newproductName,String desc ,int quantity, double price)
+    {
+        boolean found = false;
+        Store editStore = null;
+        Product editProduct = null;
+        Seller seller =(Seller) currentUser;
+        for (Store wantedStore : seller.getYourStores()) {
+            if (wantedStore.getStoreName().equals(storeName)) {
+                editStore = wantedStore;
+                found = true;
+            }
         }
+        if (!found)
+        {
+
+            return false;
+        }
+        found = false;
+        for (Product wantedProduct : editStore.getProducts()) {
+            if (wantedProduct.getProductName().equals(productName)) {
+                editProduct = wantedProduct;
+                found = true;
+                break;
+
+            }
+        }
+        if(!found)
+        {
+
+            return false;
+        }
+
+        Seller.editProduct(editProduct, editStore, newproductName,
+                desc,quantity,price);
+
+        return true;
+    }
+    public String customerStatistics()
+    {
+        StringBuilder result = new StringBuilder();
+        Seller seller =(Seller) currentUser;
+        for (Store aStore : seller.getYourStores()) {
+            result.append("Store name: ").append(aStore.getStoreName());
+            for (Customer aCustomer : aStore.getPurchases()) {
+                result.append("$ Purchase Amount: ").append(aCustomer.getPurchaseCount());
+            }
+            result.append( "$All Customer Statistics");
+            break;
+        }
+        return result.toString();
+    }
+    public String productStatistics()
+    {
+        StringBuilder result = new StringBuilder();
+        Seller seller =(Seller) currentUser;
+        for (Store aStore : seller.getYourStores()) {
+            result.append("Store name: ").append(aStore.getStoreName());
+            for (Product aProduct : aStore.getProducts()) {
+
+                result.append("$Product Name: ").append(aProduct.getProductName()).append("$Product Sales: ").append(aProduct.getSales());
+            }
+        }
+        result.append("$All Product Statistics");
+
+        return result.toString();
+    }
+    public boolean removeProduct(String storeName,String productName)
+    {
+        boolean found = false;
+        Store removeStore = null;
+        Product removeProduct = null;
+        Seller seller =(Seller) currentUser;
+        for (Store wantedStore : seller.getYourStores()) {
+            if (wantedStore.getStoreName().equals(storeName)) {
+                removeStore = wantedStore;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+
+            return false;
+        }
+        for (Product wantedProduct : removeStore.getProducts()) {
+            if (wantedProduct.getProductName().equals(productName)) {
+                removeProduct = wantedProduct;
+            }
+        }
+        Seller.removeProduct(removeProduct, removeStore);
+
+        return true;
+    }
+    public  boolean addProduct(String storeName,String productName, String description,int quantity,double price)
+    {
+        Product product = new Product(productName, description,
+                quantity, price, storeName);
+        this.products.add(product);
+        Seller seller =(Seller) currentUser;
+        for (Store wantedStore : seller.getYourStores()) {
+
+            if (wantedStore.getStoreName().equals(storeName)) {
+                wantedStore.getProducts().add(product);
+
+                return true;
+            }
+        }
+        return false;
+
     }
 
-    public static void customerMenu(Scanner s) {
+
+    public boolean addProductToCart(String ProductName) {
         Customer currentCustomer = (Customer) currentUser;
-        System.out.println("Customer Menu:");
-        System.out.println("1. View Marketplace");
-        System.out.println("2. Select Product");
-        System.out.println("3. Sort Marketplace");
-        System.out.println("4. Search Marketplace");
-        System.out.println("5. View Shopping Cart");
-        System.out.println("6. Statistics");
-        System.out.println("7. Logout");
-        System.out.print("Enter your choice: ");
-        int choice = s.nextInt();
-        s.nextLine();
-        switch (choice) {
-            case 1:
-                for (Product product : Marketplace.products) {
-                    System.out.println("Store: " + product.getProductStoreName());
-                    System.out.println("Product: " + product.getProductName());
-                    System.out.println("Price: " + product.getPrice());
-                    System.out.println("Quantity: " + product.getQuantity());
-                    System.out.println("------------------");
-                }
-                System.out.println("All products");
-                break;
-            case 2:
-                System.out.println("Enter desired Product name");
-                String desiredProductName = s.nextLine();
-                for (Product product : Marketplace.products) {
-                    if (product.getProductName().toLowerCase().
-                            contains(desiredProductName.toLowerCase())) {
-                        System.out.println("Product Selected");
-                        System.out.println("1: Buy Product");
-                        System.out.println("2. Add Product to Cart");
-                        int productChoice = s.nextInt();
-                        s.nextLine();
-                        switch (productChoice) {
-                            case 1:
-                                System.out.println("Enter desired purchase Quantity");
-                                int desiredAmount = s.nextInt();
-                                s.nextLine();
-                                currentCustomer.purchaseProduct(product, desiredAmount);
-                                break;
-                            case 2:
-                                currentCustomer.addToShoppingCart(product);
-                                break;
-                            default:
-                                System.out.println("Please enter 1 or 2");
-                                break;
-                        }
-                    }
-                }
-            case 3:
-                System.out.println("Sort by quantity or price?");
-                System.out.println("1. Quantity");
-                System.out.println("2. Price");
-                int sortChoice = s.nextInt();
-                s.nextLine();
-
-                switch (sortChoice) {
-                    case 1:
-
-                        break;
-                    case 2:
-
-                        break;
-                    default:
-                        System.out.println("Please enter 1 or 2");
-                        break;
-                }
-            case 4:
-                System.out.println("Enter search term");
-                String searchTerm = s.nextLine();
-                ArrayList<Product> matchingProducts = currentCustomer.searchProducts(products, searchTerm);
-                for (Product product : matchingProducts) {
-                    System.out.println("Store: " + product.getProductStoreName());
-                    System.out.println("Product: " + product.getProductName());
-                    System.out.println("Price: " + product.getPrice());
-                    System.out.println("Quantity: " + product.getQuantity());
-                    System.out.println("------------------");
-                }
-                System.out.println("All matching products");
-                break;
-            case 5:
-                for (Product product : currentCustomer.getShoppingCart()) {
-                    System.out.println("Store: " + product.getProductStoreName());
-                    System.out.println("Product: " + product.getProductName());
-                    System.out.println("Price: " + product.getPrice());
-                    System.out.println("Quantity: " + product.getQuantity());
-                    System.out.println("------------------");
-                }
-                System.out.println("All matching products");
-                break;
-            case 6:
-                System.out.println("Get personal purchases or total purchases");
-                System.out.println("1. Personal");
-                System.out.println("2. Total");
-                int statisticChoice = s.nextInt();
-                s.nextLine();
-                switch (statisticChoice) {
-                    case 1:
-                        for (Product product : currentCustomer.getPurchasedItems()) {
-                            System.out.println("Store: " + product.getProductStoreName());
-                            System.out.println("Product: " + product.getProductName());
-                            System.out.println("Price: " + product.getPrice());
-                            System.out.println("Quantity: " + product.getQuantity());
-                            System.out.println("------------------");
-                        }
-                        break;
-                    case 2:
-                        for (Store store: Marketplace.getStores()) {
-                            System.out.println("Store: " + store.getStoreName());
-                            System.out.println("Purchases: " + store.getPurchases().size());
-                            System.out.println("------------------");
-                        }
-                        break;
-                    default:
-                        System.out.println("Enter 1 or 2");
-                        break;
-                }
-            case 7:
-                System.out.println("Logged out successfully");
-                break;
-            default:
-                System.out.println("Please enter number 1 through 7");
-                break;
+        for (Product product : this.products) {
+            if (product.getProductName().toLowerCase().
+                    contains(ProductName.toLowerCase())) {
+                currentCustomer.addToShoppingCart(product);
+                return true;
+            }
         }
+        return false;
     }
+
+    public boolean buyProduct(String ProductName, int quantity) {
+        Customer currentCustomer = (Customer) currentUser;
+        for (Product product : this.products) {
+            if (product.getProductName().toLowerCase().
+                    contains(ProductName.toLowerCase())) {
+                return  currentCustomer.purchaseProduct(this, product, quantity);
+
+            }
+
+        }
+        return false;
+    }
+    public String search(String productName)
+    {
+        Customer currentCustomer = (Customer) currentUser;
+        StringBuilder result = new StringBuilder();
+        ArrayList<Product> matchingProducts = currentCustomer.searchProducts(products, productName);
+        for (Product product : matchingProducts) {
+            result.append("Store: ").append(product.getProductStoreName()).append("$");
+            result.append("Product: ").append(product.getProductName()).append("$");
+            result.append("Price: ").append(product.getPrice()).append("$");
+            result.append("Quantity: ").append(product.getQuantity()).append("$");
+            result.append("------------------").append("$");
+        }
+        result.append("All matching products");
+        return result.toString();
+    }
+    public String viewPurchases()
+    {
+        Customer currentCustomer = (Customer) currentUser;
+        StringBuilder result = new StringBuilder();
+        for (Product product : currentCustomer.getPurchasedItems()) {
+            result.append("Store: ").append(product.getProductStoreName()).append("$");
+            result.append("Product: ").append(product.getProductName()).append("$");
+            result.append("Price: ").append(product.getPrice()).append("$");
+            result.append("Quantity: ").append(product.getQuantity()).append("$");
+            result.append("------------------").append("$");
+        }
+        return result.toString();
+    }
+    public String view()
+    {
+        StringBuilder result = new StringBuilder();
+        for (Product product : this.products) {
+            result.append("Store: ").append(product.getProductStoreName()).append("$");
+            result.append("Product: ").append(product.getProductName()).append("$");
+            result.append("Price: ").append(product.getPrice()).append("$");
+            result.append("Quantity: ").append(product.getQuantity()).append("$");
+            result.append("------------------").append("$");
+        }
+        result.append("All products");
+        return result.toString();
+    }
+
 
 }
