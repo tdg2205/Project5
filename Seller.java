@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Seller extends User{
-    public static ArrayList<Store> yourStores;
+    public  ArrayList<Store> yourStores;
 
     public Seller(String email, String password, String username) {
         super(email, password, username, true);
@@ -15,7 +15,7 @@ public class Seller extends User{
         return  yourStores;
     }
 
-    public static ArrayList<Store> getYourStores() {
+    public  ArrayList<Store> getYourStores() {
         return yourStores;
     }
 
