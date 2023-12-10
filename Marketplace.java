@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Marketplace {
@@ -47,11 +45,11 @@ public class Marketplace {
 
 
 
-    public   void readProduct() {
+    public void readProduct() {
         try (BufferedReader br = new BufferedReader(new FileReader("ProductDatabase.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] productData = line.split(",");
+                String[] productData = line.split("\\|");
                 String name = productData[0];
                 String description = productData[1];
                 int quantity = Integer.parseInt(productData[2]);
@@ -65,12 +63,55 @@ public class Marketplace {
             System.out.println("No previous products");
         }
     }
+    public void readStore() {
+        try (BufferedReader br = new BufferedReader(new FileReader("StoreDatabase.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] productData = line.split("\\|");
+                String userUsername = productData[0];
+                String storeName = productData[1];
+                User tempUser = null;
+                ArrayList<Product> tempStoreProducts = null;
+                for (Product product : products) {
+                    if (storeName.equals(product.getProductStoreName())) {
+                        tempStoreProducts.add(product);
+                    }
+                }
+                for (User user : users) {
+                    if (userUsername.equals(user.getUsername())) {
+                        tempUser = user;
+                    }
+                }
+                Store store = new Store(tempStoreProducts, storeName, tempUser);
+                this.getStores().add(store);
+                System.out.println("Stores Loaded");
+            }
+        } catch (IOException e) {
+            System.out.println("No previous stores");
+        }
+    }
+    public void readUser() {
+        try (BufferedReader br = new BufferedReader(new FileReader("UserDatabase.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] productData = line.split("\\|");
+                String email = productData[0];
+                String password = productData[1];
+                String username = productData[2];
+                boolean seller = Boolean.parseBoolean(productData[3]);
+                User user = new User(email, password, username, seller);
+                this.getUsers().add(user);
+                System.out.println("Users Loaded");
+            }
+        } catch (IOException e) {
+            System.out.println("No previous users");
+        }
+    }
 
 
+    public boolean create(String email, String username, String password, boolean seller ) {
 
-    public   boolean create(String email, String username, String password, boolean seller ) {
-
-        if (!email.contains("@") || !email.contains(".") || email.contains(",")) {
+        if (!email.contains("@") || !email.contains(".") || email.contains("|")) {
             System.out.println("Email not valid. Please try again or login");
             return false;
         }
@@ -79,10 +120,10 @@ public class Marketplace {
                 System.out.println("Email already in use. Login or try a different email");
                 return false;
             }
-        } 
+        }
 
-        if (username.contains(",")) {
-            System.out.println("Username cannot contain a ',' symbol");
+        if (username.contains("|")) {
+            System.out.println("Username cannot contain a '|' symbol");
             return false;
         }
         for (User user : users) {
@@ -93,25 +134,38 @@ public class Marketplace {
             }
         }
 
-        if (password.contains(",")) {
-            System.out.println("Password cannot contain a ',' symbol");
+        if (password.contains("|")) {
+            System.out.println("Password cannot contain a '|' symbol");
             return false;
         }
         System.out.println("Valid password");
 
-       
+
 
         if (seller) {
             currentUser = new Seller(email, password, username);
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))){
+                String fileUser = email + "|" + password + "|" + username + "|true\n";
+                bw.write(fileUser);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
             this.getUsers().add(new Seller(email, password, username));
+
 
         }
         else {
             currentUser = new Customer(email, password, username);
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))){
+                String fileUser = email + "|" + password + "|" + username + "|false\n";
+                bw.write(fileUser);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
             this.getUsers().add(new Customer(email, password, username));
         }
         return true;
-    } 
+    }
 
     public String login(String username, String password) {
         User loginUser = null;
@@ -147,7 +201,7 @@ public class Marketplace {
     }
 
 
-    
+
 
     public boolean sortQuantity() {
         Comparator<Product> quantityComparator = Comparator.comparingInt(Product::getQuantity);
@@ -158,7 +212,7 @@ public class Marketplace {
             products.sort(quantityComparator);
         }
         return true;
-    } 
+    }
 
     public   boolean sortPrice() {
         Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
@@ -169,15 +223,21 @@ public class Marketplace {
             products.sort(priceComparator);
         }
         return true;
-    } 
+    }
 
 
-    public void createStore(String storename)
+    public void createStore(String storeName)
     {
         ArrayList<Product> storeProducts = new ArrayList<Product>();
 
-        Store store = new Store(storeProducts, storename, currentUser);
+        Store store = new Store(storeProducts, storeName, currentUser);
         Seller currentSeller = (Seller) currentUser;
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("StoreDatabase.txt"))){
+            String fileStore = currentSeller.getUsername() + "|" + storeName +  "\n";
+            bw.write(fileStore);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
         currentSeller.createYourStore(store);
     }
     public boolean editProduct(String storeName, String productName, String newproductName,String desc ,int quantity, double price)
@@ -272,17 +332,22 @@ public class Marketplace {
 
         return true;
     }
-    public  boolean addProduct(String storeName,String productName, String description,int quantity,double price)
-    {
+    public  boolean addProduct(String storeName,String productName, String description,int quantity,double price) throws IOException {
         Product product = new Product(productName, description,
                 quantity, price, storeName);
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("ProductDatabase.txt"))){
+            String fileProduct = productName + "|" + description + "|" + quantity + "|" +
+                    price + "|" + storeName + "\n";
+            bw.write(fileProduct);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
         this.products.add(product);
         Seller seller =(Seller) currentUser;
         for (Store wantedStore : seller.getYourStores()) {
 
             if (wantedStore.getStoreName().equals(storeName)) {
                 wantedStore.getProducts().add(product);
-
                 return true;
             }
         }
