@@ -42,5 +42,6 @@ public class Store {
         this.storeProducts = products;
         this.storeName = storeName;
         this.owner = owner;
+        this.purchases = new ArrayList<>();
     }
 }
