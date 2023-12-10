@@ -4,13 +4,15 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Customer extends User{
-    private static int purchaseCount;
-    private static ArrayList<Product> purchasedItems;
-    private static ArrayList<Product> shoppingCart;
+    private  int purchaseCount;
+    private  ArrayList<Product> purchasedItems;
+    private  ArrayList<Product> shoppingCart;
 
 
     public Customer(String email, String password, String username) {
         super(email, password, username, false);
+        shoppingCart=new ArrayList<>();
+        purchasedItems =new ArrayList<>();
     }
 
 
@@ -22,8 +24,8 @@ public class Customer extends User{
         this.purchasedItems = purchasedItems;
     }
 
-    public static void setShoppingCart(ArrayList<Product> shoppingCart) {
-        Customer.shoppingCart = shoppingCart;
+    public  void setShoppingCart(ArrayList<Product> shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 
     public int getPurchaseCount() {
@@ -41,22 +43,22 @@ public class Customer extends User{
         shoppingCart.add(product);
 
     }
-    public void purchaseProduct(Product product, int quantity) {
+    public boolean purchaseProduct(Marketplace marketplace, Product product, int quantity) {
         if (product.getQuantity() >= quantity) {
             product.setQuantity(product.getQuantity() - quantity);
             purchasedItems.add(product);
             purchaseCount++;
             product.setSales(+quantity);
-            for (Store store:Marketplace.getStores()) {
+            for (Store store:marketplace.getStores()) {
                 if (store.getStoreName().equals(product.getProductStoreName())) {
-
                 }
             }
             System.out.println("Purchase successful! " +
                     quantity + " units of " + product.getProductName() +
                     " bought for " + (quantity * product.getPrice()));
+            return true;
         } else {
-            System.out.println("Insufficient quantity available.");
+            return false;
         }
     }
 
