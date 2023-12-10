@@ -39,7 +39,7 @@ public class ClientHandler implements Runnable {
     }
 
 
-    private String processCommand(String command) {
+    private String processCommand(String command) throws IOException {
         String[] commandParts = command.split("\\s+");
         String result = "";
         boolean out;
@@ -207,7 +207,7 @@ public class ClientHandler implements Runnable {
     }
 
 
-    private boolean addProduct(String storeName,String productName, String description, int quantity, double price) {
+    private boolean addProduct(String storeName,String productName, String description, int quantity, double price) throws IOException {
 
         return marketplace.addProduct(storeName,productName, description, quantity, price);
     }
