@@ -11,6 +11,9 @@ public class Seller extends User{
     public void setStores(ArrayList<Store> stores) {
         yourStores = stores;
     }
+    public ArrayList<Store> getStores() {
+        return  yourStores;
+    }
 
     public static ArrayList<Store> getYourStores() {
         return yourStores;
