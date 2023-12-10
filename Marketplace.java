@@ -116,14 +116,18 @@ public class Marketplace {
     public String login(String username, String password) {
         User loginUser = null;
         boolean valid = false;
-        for (User user : users) {
-            if (user.getUsername().equals(username) || user.getEmail().equals(username)) {
-                System.out.println("Account found");
-                loginUser = user;
-                valid = true;
-                break;
+        if (users.isEmpty()) {
+            System.out.println("No previous users");
+            return "failure";
+        } else {
+            for (User user : users) {
+                if (user.getUsername().equals(username) || user.getEmail().equals(username)) {
+                    System.out.println("Account found");
+                    loginUser = user;
+                    valid = true;
+                    break;
+                }
             }
-        }
         if (!valid) {
             System.out.println("Invalid Username or Email");
             return "failure";
@@ -139,7 +143,8 @@ public class Marketplace {
             System.out.println("Wrong password. Please retry");
             return "failure";
         }
-    } 
+    }
+    }
 
 
     
