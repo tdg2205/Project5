@@ -38,8 +38,8 @@ public class Store {
         return purchases;
     }
 
-    public Store(ArrayList<Product> products, String storeName, User owner) {
-        this.storeProducts = products;
+    public Store( String storeName, User owner) {
+        this.storeProducts = new ArrayList<>();
         this.storeName = storeName;
         this.owner = owner;
         this.purchases = new ArrayList<>();
