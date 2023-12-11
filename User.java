@@ -1,7 +1,7 @@
 /**
  * User.java
  * <p>
- * This is a User.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ * This is a User.java class which contains all the fields, getters and setters method for the user.
  *
  * @author Tyler Gentry, lab sec 30
  * @version 11 November, 2023
