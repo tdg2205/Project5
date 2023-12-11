@@ -27,7 +27,7 @@ public class ClientHandler implements Runnable {
 
 
                 String response = processCommand(command);
-
+                marketplace.write();
                 writer.println(response);
             }
 
