@@ -18,6 +18,9 @@ public class Marketplace {
         products = new ArrayList<>();
         stores = new ArrayList<>();
         users = new ArrayList<>();
+        readUser();
+        readStore();
+        readProduct();
     }
     public  void setProducts(ArrayList<Product> products) {
         this.products = products;
@@ -56,7 +59,14 @@ public class Marketplace {
                 double price = Double.parseDouble(productData[3]);
                 String storeName = productData[4];
                 Product product = new Product(name, description, quantity, price, storeName);
-                this.getProducts().add(product);
+                Seller seller =(Seller) currentUser;
+                for (Store wantedStore : seller.getYourStores()) {
+                    if (wantedStore.getStoreName().equals(storeName)) {
+                        wantedStore.getProducts().add(product);
+                        this.products.add(product);
+                        System.out.println("check : "+product.getProductName());
+                    }
+                }
                 System.out.println("Products Loaded");
             }
         } catch (IOException e) {
@@ -82,8 +92,11 @@ public class Marketplace {
                         tempUser = user;
                     }
                 }
-                Store store = new Store(tempStoreProducts, storeName, tempUser);
+                Store store = new Store(storeName, tempUser);
+                Seller currentSeller = (Seller) currentUser;
+                currentSeller.createYourStore(store);
                 this.getStores().add(store);
+                System.out.println("store name: "+store.getStoreName());
                 System.out.println("Stores Loaded");
             }
         } catch (IOException e) {
@@ -99,7 +112,14 @@ public class Marketplace {
                 String password = productData[1];
                 String username = productData[2];
                 boolean seller = Boolean.parseBoolean(productData[3]);
-                User user = new User(email, password, username, seller);
+                User user;
+                if(seller) {
+                    user = new Seller(email, password, username);
+                    currentUser = user;
+
+                }
+                else
+                    user = new Customer(email, password, username);
                 this.getUsers().add(user);
                 System.out.println("Users Loaded");
             }
@@ -108,6 +128,53 @@ public class Marketplace {
         }
     }
 
+    private void writeUsers()
+    {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))){
+            String fileUser="";
+            for (User u:users) {
+                fileUser = u.getEmail() + "|" + u.getPassword() + "|" + u.getUsername() + "|"+u.isSeller()+"\n";
+                bw.write(fileUser);
+
+            }
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void writeStore()
+    {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("StoreDatabase.txt"))){
+            for (Store s :stores) {
+                String fileStore = s.getOwner().getUsername() + "|" + s.getStoreName() +  "\n";
+                bw.write(fileStore);
+            }
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    private void writeProduct()
+    {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("ProductDatabase.txt",false))){
+            for (Product p:products) {
+                String fileProduct = p.getProductName() + "|" + p.getDescription() + "|" + p.getQuantity() + "|" +
+                        p.getPrice() + "|" + p.getProductStoreName() + "\n";
+                bw.write(fileProduct);
+            }
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void write()
+    {
+        writeUsers();
+        writeProduct();
+        writeStore();
+    }
 
     public boolean create(String email, String username, String password, boolean seller ) {
 
@@ -144,12 +211,7 @@ public class Marketplace {
 
         if (seller) {
             currentUser = new Seller(email, password, username);
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))){
-                String fileUser = email + "|" + password + "|" + username + "|true\n";
-                bw.write(fileUser);
-            } catch (IOException e){
-                e.printStackTrace();
-            }
+
             this.getUsers().add(new Seller(email, password, username));
 
 
@@ -182,22 +244,22 @@ public class Marketplace {
                     break;
                 }
             }
-        if (!valid) {
-            System.out.println("Invalid Username or Email");
-            return "failure";
+            if (!valid) {
+                System.out.println("Invalid Username or Email");
+                return "failure";
+            }
+            if (loginUser.getPassword().equals(password)) {
+                System.out.println("Logged In");
+                currentUser = loginUser;
+                if (currentUser.isSeller())
+                    return "seller";
+                else
+                    return "customer";
+            } else {
+                System.out.println("Wrong password. Please retry");
+                return "failure";
+            }
         }
-        if (loginUser.getPassword().equals(password)) {
-            System.out.println("Logged In");
-            currentUser = loginUser;
-            if (currentUser.isSeller())
-                return "seller";
-            else
-                return "customer";
-        } else {
-            System.out.println("Wrong password. Please retry");
-            return "failure";
-        }
-    }
     }
 
 
@@ -228,17 +290,10 @@ public class Marketplace {
 
     public void createStore(String storeName)
     {
-        ArrayList<Product> storeProducts = new ArrayList<Product>();
-
-        Store store = new Store(storeProducts, storeName, currentUser);
+        Store store = new Store( storeName, currentUser);
         Seller currentSeller = (Seller) currentUser;
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("StoreDatabase.txt"))){
-            String fileStore = currentSeller.getUsername() + "|" + storeName +  "\n";
-            bw.write(fileStore);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
         currentSeller.createYourStore(store);
+        this.stores.add(store);
     }
     public boolean editProduct(String storeName, String productName, String newproductName,String desc ,int quantity, double price)
     {
@@ -254,7 +309,6 @@ public class Marketplace {
         }
         if (!found)
         {
-
             return false;
         }
         found = false;
@@ -335,19 +389,11 @@ public class Marketplace {
     public  boolean addProduct(String storeName,String productName, String description,int quantity,double price) throws IOException {
         Product product = new Product(productName, description,
                 quantity, price, storeName);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("ProductDatabase.txt"))){
-            String fileProduct = productName + "|" + description + "|" + quantity + "|" +
-                    price + "|" + storeName + "\n";
-            bw.write(fileProduct);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        this.products.add(product);
         Seller seller =(Seller) currentUser;
         for (Store wantedStore : seller.getYourStores()) {
-
             if (wantedStore.getStoreName().equals(storeName)) {
                 wantedStore.getProducts().add(product);
+                this.products.add(product);
                 return true;
             }
         }
