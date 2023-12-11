@@ -1,47 +1,44 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-class Helper
-{
-    public String readCustomer()
-    {
-        Scanner s= new Scanner(System.in);
-        System.out.println("Customer Menu:");
-        System.out.println("1. View Marketplace");
-        System.out.println("2. Select Product");
-        System.out.println("3. Sort Marketplace");
-        System.out.println("4. Search Marketplace");
-        System.out.println("5. View Shopping Cart");
-        System.out.println("6. purchases");
-        System.out.println("7. Logout");
-        System.out.print("Enter your choice: ");
-        int choice = s.nextInt();
-        String input="";
-        s.nextLine();
+/**
+ * Store.java
+ * <p>
+ * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ *
+ * @author Krish Sharma and Tyler Gentry, lab sec 30
+ * @version 11 November, 2023
+ */
+class Helper {
+    public String readCustomer() {
+        String input = "";
+        String[] menuOption = {"View Marketplace", "Select Product", "Sort Marketplace", "Search Marketplace", "View Shopping Cart", "View Purchases", "Logout"};
+        String[] sortOption = {"Quantity", "Price"};
+        String[] selectOption = {"Buy Product", "Add to Cart"};
+        String choice = (String) JOptionPane.showInputDialog(null, "Customer Menu", "Marketplace",
+                JOptionPane.PLAIN_MESSAGE, null, menuOption, null);
         switch (choice) {
-            case 1:
-                input="view";
+            case "View Marketplace":
+                input = "view";
                 break;
-            case 2:
+            case "Select Product":
                 System.out.println("Enter desired Product name");
-                input="product ";
-                String desiredProductName = s.nextLine();
-                input+=desiredProductName+" ";
-                System.out.println("1: Buy Product");
-                System.out.println("2. Add Product to Cart");
-                int productChoice = s.nextInt();
-                s.nextLine();
+                input = "product ";
+                String desiredProductName = JOptionPane.showInputDialog(null, "Enter product name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                input += desiredProductName + " ";
+                String productChoice = (String) JOptionPane.showInputDialog(null, "Quantity or Price Sort?", "Marketplace",
+                        JOptionPane.PLAIN_MESSAGE, null, selectOption, null);
                 switch (productChoice) {
-                    case 1:
-                        System.out.println("Enter desired purchase Quantity");
-                        int quantity = s.nextInt();
-                        s.nextLine();
-                        input+="buy "+quantity;
+                    case "Buy Product":
+                        int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter quantity of product to purchase", "Marketplace",
+                                JOptionPane.QUESTION_MESSAGE));
+                        input += "buy " + quantity;
                         break;
-                    case 2:
-                        input+="add ";
+                    case "Add to Cart":
+                        input += "add ";
                         break;
                     default:
                         System.out.println("Please enter 1 or 2");
@@ -49,39 +46,36 @@ class Helper
                 }
                 break;
 
-            case 3:
-                System.out.println("Sort by quantity or price?");
-                System.out.println("1. Quantity");
-                System.out.println("2. Price");
-                int sortChoice = s.nextInt();
-                s.nextLine();
+            case "Sort Marketplace":
+                String sortChoice = (String) JOptionPane.showInputDialog(null, "Quantity or Price Sort?", "Marketplace",
+                        JOptionPane.PLAIN_MESSAGE, null, sortOption, null);
                 //not working cant figure out why
                 switch (sortChoice) {
-                    case 1:
-                        input="sort quantity";
+                    case "Quantity":
+                        input = "sort quantity";
 
                         break;
-                    case 2:
-                        input="sort price";
+                    case "Price":
+                        input = "sort price";
                         break;
                     default:
                         System.out.println("Please enter 1 or 2");
                         break;
                 }
                 break;
-            case 4:
-                System.out.println("Enter search term");
-                String searchTerm = s.nextLine();
-                input="search "+searchTerm;
+            case "Search Marketplace":
+                String searchTerm = JOptionPane.showInputDialog(null, "Enter search term", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                input = "search " + searchTerm;
                 break;
-            case 5:
-                input="cart";
+            case "View Shopping Cart":
+                input = "cart";
                 break;
-            case 6:
-                input="purchases";
+            case "View Purchases":
+                input = "purchases";
                 break;
-            case 7:
-                input="exit";
+            case "Logout":
+                input = "exit";
                 break;
             default:
                 System.out.println("Please enter number 1 through 7");
@@ -89,94 +83,85 @@ class Helper
         }
         return input;
     }
-    public String readSeller()
-    {
-        String input="";
-        Scanner s= new Scanner(System.in);
+
+    public String readSeller() {
+        String input = "";
+        Scanner s = new Scanner(System.in);
         String storeName = "";
         String productName = "";
         String productDescription = "";
+        String productDescriptionFirst = "";
         int productquantity = 0;
         double productPrice = 0;
-        System.out.println("Seller Menu:");
-        System.out.println("1. Create Store");
-        System.out.println("2. Add Product");
-        System.out.println("3. Remove Product");
-        System.out.println("4. Edit Product");
-        System.out.println("5. View Sales");
-        System.out.println("6. View Statistics");
-        System.out.println("7. Logout");
-        System.out.print("Enter your choice: ");
-        int choice = s.nextInt();
-        s.nextLine();
+        String[] menuOption = {"Create Store", "Add Product", "Remove Product", "Edit Product",
+                "View Sales", "View Statistics", "Logout"};
+        String[] statOption = {"Customer Statistics", "Product Statistics"};
+        String choice = (String) JOptionPane.showInputDialog(null, "Seller Menu", "Marketplace",
+                JOptionPane.PLAIN_MESSAGE, null, menuOption, null);
         switch (choice) {
-            case 1:
-                input="createstore ";
-                System.out.println("enter desired store name");
-                storeName = s.nextLine();
-                input+=storeName;
+            case "Create Store":
+                input = "createstore ";
+                storeName = JOptionPane.showInputDialog(null, "Enter store name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                input += storeName;
                 break;
-            case 2:
-                input="addproduct ";
-                System.out.println("Enter the store name");
-                storeName = s.nextLine();
-                System.out.println("Please enter the name of product for store");
-                productName = s.nextLine();
-                System.out.println("Please enter the description of product for store");
-                productDescription = s.nextLine().replace(" ","-");
-                System.out.println("Please enter the quantity of product for store");
-                productquantity = s.nextInt();
-                s.nextLine();
-                System.out.println("Please enter the price of product for store");
-                productPrice = s.nextDouble();
-                s.nextLine();
-                input+=storeName+" "+productName+" "+productDescription+" "+productquantity+" "+productPrice;
+            case "Add Product":
+                input = "addproduct ";
+                storeName = JOptionPane.showInputDialog(null, "Enter store name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                productName = JOptionPane.showInputDialog(null, "Enter product name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                productDescriptionFirst = JOptionPane.showInputDialog(null, "Enter product description", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                productDescription = productDescriptionFirst.replace(" ", "-");
+                productquantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter product quantity", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE));
+                productPrice = Double.parseDouble(JOptionPane.showInputDialog(null, "Enter product price", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE));
+                input += storeName + " " + productName + " " + productDescription + " " + productquantity + " " + productPrice;
                 break;
-            case 3:
-                input="removeproduct ";
-                System.out.println("Enter the store name");
-                storeName = s.nextLine();
-                System.out.println("Enter name of product to remove");
-                productName = s.nextLine();
-                input+=storeName+" "+productName;
+            case "Remove Product":
+                input = "removeproduct ";
+                storeName = JOptionPane.showInputDialog(null, "Enter store name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                productName = JOptionPane.showInputDialog(null, "Enter product name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                input += storeName + " " + productName;
                 break;
-            case 4:
-                input="edit ";
-                System.out.println("Enter the store name");
-                storeName = s.nextLine();
-                System.out.println("Enter name of product to Edit");
-                productName = s.nextLine();
-
-
-
-                System.out.println("Please enter the new name of product for store");
-                String productnewName = s.nextLine();
-                System.out.println("Please enter the new description of product for store");
-                productDescription = s.nextLine().replace(" ","-");
-                System.out.println("Please enter the new quantity of product for store");
-                productquantity = s.nextInt();
-                s.nextLine();
-                System.out.println("Please enter the new price of product for store");
-                productPrice = s.nextDouble();
-                s.nextLine();
-                input+=storeName+" "+productName+" "+productnewName+" "+productDescription+" "+productquantity+" "+productPrice;
+            case "Edit Product":
+                input = "edit ";
+                storeName = JOptionPane.showInputDialog(null, "Enter store name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                productName = JOptionPane.showInputDialog(null, "Enter product name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                String productnewName = JOptionPane.showInputDialog(null, "Enter product new name", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                productDescriptionFirst = JOptionPane.showInputDialog(null, "Enter new product description", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE);
+                productDescription = productDescriptionFirst.replace(" ", "-");
+                productquantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter new product quantity", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE));
+                productPrice = Double.parseDouble(JOptionPane.showInputDialog(null, "Enter new product price", "Marketplace",
+                        JOptionPane.QUESTION_MESSAGE));
+                input += storeName + " " + productName + " " + productnewName + " " + productDescription + " " + productquantity + " " + productPrice;
                 break;
-            case 5:
+            case "View Sales":
                 input = "viewsales";
                 break;
-            case 6:
+            case "View Statistics":
                 System.out.println("1. Customer Statistics");
                 System.out.println("2. Product Statistics");
-                int statisticChoice = s.nextInt();
+                String statisticChoice = (String) JOptionPane.showInputDialog(null, "Customer or Product Statistics?", "Marketplace",
+                        JOptionPane.PLAIN_MESSAGE, null, statOption, null);
                 s.nextLine();
                 input = switch (statisticChoice) {
-                    case 1 -> "statistics customer";
-                    case 2 -> "statistics product";
+                    case "Customer Statistics" -> "statistics customer";
+                    case "Product Statistics" -> "statistics product";
                     default -> input;
                 };
                 break;
 
-            case 7:
+            case "Logout":
                 input = "exit";
             default:
                 System.out.println("Enter a number 1 through 8");
@@ -184,53 +169,78 @@ class Helper
         }
         return input;
     }
-    public String readLogin()
-    {
-        String input="login ";
 
-        Scanner s= new Scanner(System.in);
-        System.out.println("Enter username or email");
-        String username = s.nextLine();
-        System.out.println("Enter password");
-        String password = s.nextLine();
-        input+=username+" "+password;
+    public String readLogin() {
+        String input = "login ";
+        String username = JOptionPane.showInputDialog(null, "Enter your  or username", "Marketplace",
+                JOptionPane.QUESTION_MESSAGE);
+        String password = JOptionPane.showInputDialog(null, "Enter your password", "Marketplace",
+                JOptionPane.QUESTION_MESSAGE);
+        input += username + " " + password;
         return input;
     }
-    public String readCreate()
-    {
-        String input="create ";
+
+    public String readCreate() {
+        String input = "create ";
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter email");
-        String email = s.nextLine();
-        System.out.println("Please enter  username");
-        String username = s.nextLine();
-        System.out.println("Please enter desired password");
-        String password = s.nextLine();
-        System.out.println("Please enter desired role:Seller/Customer");
-        String role = s.nextLine();
-
-        input += email+" "+username+" "+password+" "+role;
-        return input;
-
-
-    }
-    public  String readMainInput() {
-        String input="";
-        Scanner s = new Scanner(System.in);
-        System.out.println("Welcome to the Marketplace!");
-        System.out.println("1. Login");
-        System.out.println("2. Create Account");
-        System.out.println("3. Exit");
-        System.out.print("Enter your choice: ");
-        int choice = s.nextInt();
-        s.nextLine();
-        switch (choice) {
-            case 1 ->
-                    input="login";
-            case 2 -> input="create";
-            case 3 -> {
-                input="exit";
+        boolean valid = false;
+        boolean validTwo = false;
+        boolean validThree = false;
+        String email = "";
+        String username = "";
+        String password = "";
+        String[] roleOption = {"Seller", "Customer"};
+        do {
+            email = JOptionPane.showInputDialog(null, "Enter your email", "Marketplace",
+                    JOptionPane.QUESTION_MESSAGE);
+            if (!email.contains("@") || !email.contains(".") || email.contains("|")) {
+                JOptionPane.showMessageDialog(null, "Email not valid. Please try again or login"
+                        , "Marketplace", JOptionPane.ERROR_MESSAGE);
+            } else {
+                valid = true;
             }
+        } while (!valid);
+
+        do {
+            username = JOptionPane.showInputDialog(null, "Enter your username", "Marketplace",
+                    JOptionPane.QUESTION_MESSAGE);
+            if (username.contains("|")) {
+                JOptionPane.showMessageDialog(null, "Username cannot contain a '|' symbol"
+                        , "Marketplace", JOptionPane.ERROR_MESSAGE);
+            } else {
+                validTwo = true;
+            }
+        } while (!validTwo);
+        do {
+            password = JOptionPane.showInputDialog(null, "Enter your password", "Marketplace",
+                    JOptionPane.QUESTION_MESSAGE);
+            if (username.contains("|")) {
+                JOptionPane.showMessageDialog(null, "Password cannot contain a '|' symbol"
+                        , "Marketplace", JOptionPane.ERROR_MESSAGE);
+            } else {
+                validThree = true;
+            }
+        } while (!validThree);
+
+        String role = (String) JOptionPane.showInputDialog(null, "Select role", "Marketplace",
+                JOptionPane.PLAIN_MESSAGE, null, roleOption, null);
+
+        input += email + " " + username + " " + password + " " + role;
+        return input;
+
+
+    }
+
+    public String readMainInput() {
+        String input = "";
+        String[] introOptions = {"Login", "Create Account", "Exit"};
+        String choice = (String) JOptionPane.showInputDialog(null, "Welcome to Marketplace:Select Option", "Marketplace",
+                JOptionPane.PLAIN_MESSAGE, null, introOptions, null);
+        switch (choice) {
+            case "Login" -> input = "login";
+            case "Create Account" -> input = "create";
+            case "Exit" -> input = "exit";
+
             default -> System.out.println("Invalid choice. Please try again.");
         }
 
@@ -252,38 +262,35 @@ public class MarketplaceClient {
             while (true) {
                 System.out.print("Enter a command (type 'exit' to quit): ");
                 String command = help.readMainInput();
-                if(command.equals("login"))
+                if (command.equals("login"))
                     command = help.readLogin();
-                else if(command.equals("create"))
+                else if (command.equals("create"))
                     command = help.readCreate();
                 else if (command.equals("exit"))
                     break;
 
                 writer.println(command);
                 String response = serverReader.readLine();
-                if(response.equals("seller"))
-                {
+                if (response.equals("seller")) {
                     command = help.readSeller();
-                    while(!command.equals("exit"))
-                    {
+                    while (!command.equals("exit")) {
                         writer.println(command);
                         response = serverReader.readLine();
-                        System.out.println("Hello seller:  \n"+response.replace("$","\n"));
+                        System.out.println("Hello seller:  \n" + response.replace("$", "\n"));
                         command = help.readSeller();
                     }
-                }
-                else if(response.equals("customer")) {
+                } else if (response.equals("customer")) {
                     command = help.readCustomer();
-                    while(!command.equals("exit"))
-                    {
+                    while (!command.equals("exit")) {
                         writer.println(command);
                         response = serverReader.readLine();
-                        System.out.println("Hello customer: \n"+response.replace("$","\n"));
+                        String[] allResponse = response.split("\\$");
+                        JOptionPane.showInputDialog(null, "Seller Menu", "Marketplace",
+                                JOptionPane.PLAIN_MESSAGE, null, allResponse, null);
+                        System.out.println("Hello customer: \n" + response.replace("$", "\n"));
                         command = help.readCustomer();
                     }
-                }
-                else if(response.equals("failure"))
-                {
+                } else if (response.equals("failure")) {
                     System.out.println(response);
                 }
             }
@@ -294,6 +301,3 @@ public class MarketplaceClient {
         }
     }
 }
-
-
-
