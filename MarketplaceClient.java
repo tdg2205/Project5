@@ -5,8 +5,6 @@ import java.util.Scanner;
 
 class Helper
 {
-
-
     public String readCustomer()
     {
         Scanner s= new Scanner(System.in);
@@ -57,7 +55,7 @@ class Helper
                 System.out.println("2. Price");
                 int sortChoice = s.nextInt();
                 s.nextLine();
-
+                //not working cant figure out why
                 switch (sortChoice) {
                     case 1:
                         input="sort quantity";
@@ -132,7 +130,7 @@ class Helper
                 System.out.println("Please enter the price of product for store");
                 productPrice = s.nextDouble();
                 s.nextLine();
-                input += storeName + " " + productName + " " + productDescription + " " + productquantity + " " + productPrice;
+                input+=storeName+" "+productName+" "+productDescription+" "+productquantity+" "+productPrice;
                 break;
             case 3:
                 input="removeproduct ";
@@ -251,8 +249,6 @@ public class MarketplaceClient {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-
-
             while (true) {
                 System.out.print("Enter a command (type 'exit' to quit): ");
                 String command = help.readMainInput();
@@ -289,7 +285,6 @@ public class MarketplaceClient {
                 else if(response.equals("failure"))
                 {
                     System.out.println(response);
-                    break;
                 }
             }
 
@@ -299,4 +294,6 @@ public class MarketplaceClient {
         }
     }
 }
+
+
 
