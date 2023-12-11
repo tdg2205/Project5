@@ -2,9 +2,9 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 /**
- * Store.java
+ * MarketplaceServer.java
  * <p>
- * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ * This is a MarketplaceServer.java class which is the actual server and contain server sockets.
  *
  * @author Krish Sharma, lab sec 30
  * @version 11 November, 2023
