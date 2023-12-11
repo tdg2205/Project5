@@ -2,7 +2,7 @@ import java.util.ArrayList;
 /**
  * Store.java
  * <p>
- * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ * This is a Store.java class which contains all the fields, getters and setters method for the store.
  *
  * @author Tyler Gentry and Krish Sharma, lab sec 30
  * @version 11 November, 2023
