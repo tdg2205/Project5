@@ -8,7 +8,6 @@ public class MarketplaceServer {
         try {
             ServerSocket serverSocket = new ServerSocket(12345);
             System.out.println("Server is listening on port 12345...");
-
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress().getHostAddress());
