@@ -149,8 +149,6 @@ class Helper {
                 input = "viewsales";
                 break;
             case "View Statistics":
-                System.out.println("1. Customer Statistics");
-                System.out.println("2. Product Statistics");
                 String statisticChoice = (String) JOptionPane.showInputDialog(null, "Customer or Product Statistics?", "Marketplace",
                         JOptionPane.PLAIN_MESSAGE, null, statOption, null);
                 s.nextLine();
@@ -260,7 +258,6 @@ public class MarketplaceClient {
             BufferedReader serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
             while (true) {
-                System.out.print("Enter a command (type 'exit' to quit): ");
                 String command = help.readMainInput();
                 if (command.equals("login"))
                     command = help.readLogin();
