@@ -4,9 +4,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 /**
- * Store.java
+ * MarketplaceClient.java
  * <p>
- * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ * This is a MarketplaceClient.java class which is interacting with user like taking inputs from the user and giving it to the server and getting the response from the server and displaying it to the user.
  *
  * @author Krish Sharma and Tyler Gentry, lab sec 30
  * @version 11 November, 2023
