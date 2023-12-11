@@ -1,20 +1,26 @@
 import java.io.*;
 import java.util.*;
-
+/**
+ * Store.java
+ * <p>
+ * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ *
+ * @author Tyler Gentry and Krish Sharma, lab sec 30
+ * @version 11 November, 2023
+ */
 public class Marketplace {
 
-    private  ArrayList<Product> products;
-    private  ArrayList<Store> stores;
-    private  ArrayList<User> users;
+    private ArrayList<Product> products;
+    private ArrayList<Store> stores;
+    private ArrayList<User> users;
 
     public User getCurrentUser() {
         return currentUser;
     }
 
-    private  User currentUser;
+    private User currentUser;
 
-    public  Marketplace()
-    {
+    public Marketplace() {
         products = new ArrayList<>();
         stores = new ArrayList<>();
         users = new ArrayList<>();
@@ -22,30 +28,30 @@ public class Marketplace {
         readStore();
         readProduct();
     }
-    public  void setProducts(ArrayList<Product> products) {
+
+    public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
 
-    public  void setStores(ArrayList<Store> stores) {
+    public void setStores(ArrayList<Store> stores) {
         this.stores = stores;
     }
 
-    public  void setUsers(ArrayList<User> users) {
+    public void setUsers(ArrayList<User> users) {
         this.users = users;
     }
 
-    public  ArrayList<Product> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 
-    public   ArrayList<Store> getStores() {
+    public ArrayList<Store> getStores() {
         return stores;
     }
 
-    public   ArrayList<User> getUsers() {
+    public ArrayList<User> getUsers() {
         return users;
     }
-
 
 
     public void readProduct() {
@@ -59,12 +65,12 @@ public class Marketplace {
                 double price = Double.parseDouble(productData[3]);
                 String storeName = productData[4];
                 Product product = new Product(name, description, quantity, price, storeName);
-                Seller seller =(Seller) currentUser;
+                Seller seller = (Seller) currentUser;
                 for (Store wantedStore : seller.getYourStores()) {
                     if (wantedStore.getStoreName().equals(storeName)) {
                         wantedStore.getProducts().add(product);
                         this.products.add(product);
-                        System.out.println("check : "+product.getProductName());
+                        System.out.println("check : " + product.getProductName());
                     }
                 }
                 System.out.println("Products Loaded");
@@ -73,6 +79,7 @@ public class Marketplace {
             System.out.println("No previous products");
         }
     }
+
     public void readStore() {
         try (BufferedReader br = new BufferedReader(new FileReader("StoreDatabase.txt"))) {
             String line;
@@ -96,13 +103,14 @@ public class Marketplace {
                 Seller currentSeller = (Seller) currentUser;
                 currentSeller.createYourStore(store);
                 this.getStores().add(store);
-                System.out.println("store name: "+store.getStoreName());
+                System.out.println("store name: " + store.getStoreName());
                 System.out.println("Stores Loaded");
             }
         } catch (IOException e) {
             System.out.println("No previous stores");
         }
     }
+
     public void readUser() {
         try (BufferedReader br = new BufferedReader(new FileReader("UserDatabase.txt"))) {
             String line;
@@ -113,12 +121,11 @@ public class Marketplace {
                 String username = productData[2];
                 boolean seller = Boolean.parseBoolean(productData[3]);
                 User user;
-                if(seller) {
+                if (seller) {
                     user = new Seller(email, password, username);
                     currentUser = user;
 
-                }
-                else
+                } else
                     user = new Customer(email, password, username);
                 this.getUsers().add(user);
                 System.out.println("Users Loaded");
@@ -128,55 +135,52 @@ public class Marketplace {
         }
     }
 
-    private void writeUsers()
-    {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))){
-            String fileUser="";
-            for (User u:users) {
-                fileUser = u.getEmail() + "|" + u.getPassword() + "|" + u.getUsername() + "|"+u.isSeller()+"\n";
+    private void writeUsers() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))) {
+            String fileUser = "";
+            for (User u : users) {
+                fileUser = u.getEmail() + "|" + u.getPassword() + "|" + u.getUsername() + "|" + u.isSeller() + "\n";
                 bw.write(fileUser);
 
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void writeStore()
-    {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("StoreDatabase.txt"))){
-            for (Store s :stores) {
-                String fileStore = s.getOwner().getUsername() + "|" + s.getStoreName() +  "\n";
+    private void writeStore() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("StoreDatabase.txt"))) {
+            for (Store s : stores) {
+                String fileStore = s.getOwner().getUsername() + "|" + s.getStoreName() + "\n";
                 bw.write(fileStore);
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void writeProduct()
-    {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("ProductDatabase.txt",false))){
-            for (Product p:products) {
+
+    private void writeProduct() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("ProductDatabase.txt", false))) {
+            for (Product p : products) {
                 String fileProduct = p.getProductName() + "|" + p.getDescription() + "|" + p.getQuantity() + "|" +
                         p.getPrice() + "|" + p.getProductStoreName() + "\n";
                 bw.write(fileProduct);
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void write()
-    {
+    public void write() {
         writeUsers();
         writeProduct();
         writeStore();
     }
 
-    public boolean create(String email, String username, String password, boolean seller ) {
+    public boolean create(String email, String username, String password, boolean seller) {
 
         if (!email.contains("@") || !email.contains(".") || email.contains("|")) {
             System.out.println("Email not valid. Please try again or login");
@@ -208,20 +212,18 @@ public class Marketplace {
         System.out.println("Valid password");
 
 
-
         if (seller) {
             currentUser = new Seller(email, password, username);
 
             this.getUsers().add(new Seller(email, password, username));
 
 
-        }
-        else {
+        } else {
             currentUser = new Customer(email, password, username);
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))){
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter("UserDatabase.txt"))) {
                 String fileUser = email + "|" + password + "|" + username + "|false\n";
                 bw.write(fileUser);
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             this.getUsers().add(new Customer(email, password, username));
@@ -263,8 +265,6 @@ public class Marketplace {
     }
 
 
-
-
     public boolean sortQuantity() {
         Comparator<Product> quantityComparator = Comparator.comparingInt(Product::getQuantity);
         if (this.getProducts() == null) {
@@ -276,7 +276,7 @@ public class Marketplace {
         return true;
     }
 
-    public   boolean sortPrice() {
+    public boolean sortPrice() {
         Comparator<Product> priceComparator = Comparator.comparingDouble(Product::getPrice);
         if (this.getProducts() == null) {
             return false;
@@ -288,27 +288,25 @@ public class Marketplace {
     }
 
 
-    public void createStore(String storeName)
-    {
-        Store store = new Store( storeName, currentUser);
+    public void createStore(String storeName) {
+        Store store = new Store(storeName, currentUser);
         Seller currentSeller = (Seller) currentUser;
         currentSeller.createYourStore(store);
         this.stores.add(store);
     }
-    public boolean editProduct(String storeName, String productName, String newproductName,String desc ,int quantity, double price)
-    {
+
+    public boolean editProduct(String storeName, String productName, String newproductName, String desc, int quantity, double price) {
         boolean found = false;
         Store editStore = null;
         Product editProduct = null;
-        Seller seller =(Seller) currentUser;
+        Seller seller = (Seller) currentUser;
         for (Store wantedStore : seller.getYourStores()) {
             if (wantedStore.getStoreName().equals(storeName)) {
                 editStore = wantedStore;
                 found = true;
             }
         }
-        if (!found)
-        {
+        if (!found) {
             return false;
         }
         found = false;
@@ -320,52 +318,50 @@ public class Marketplace {
 
             }
         }
-        if(!found)
-        {
+        if (!found) {
 
             return false;
         }
 
         Seller.editProduct(editProduct, editStore, newproductName,
-                desc,quantity,price);
+                desc, quantity, price);
 
         return true;
     }
-    public String customerStatistics()
-    {
+
+    public String customerStatistics() {
         StringBuilder result = new StringBuilder();
-        Seller seller =(Seller) currentUser;
+        Seller seller = (Seller) currentUser;
         for (Store aStore : seller.getYourStores()) {
-            result.append("Store name: ").append(aStore.getStoreName());
+            result.append(aStore.getStoreName()).append(":");
             for (Customer aCustomer : aStore.getPurchases()) {
-                result.append("$ Purchase Amount: ").append(aCustomer.getPurchaseCount());
+                result.append(aCustomer.getPurchaseCount()).append("$");
             }
-            result.append( "$All Customer Statistics");
+            result.append("All Customer Statistics");
             break;
         }
         return result.toString();
     }
-    public String productStatistics()
-    {
-        StringBuilder result = new StringBuilder();
-        Seller seller =(Seller) currentUser;
-        for (Store aStore : seller.getYourStores()) {
-            result.append("Store name: ").append(aStore.getStoreName());
-            for (Product aProduct : aStore.getProducts()) {
 
-                result.append("$Product Name: ").append(aProduct.getProductName()).append("$Product Sales: ").append(aProduct.getSales());
+    public String productStatistics() {
+        StringBuilder result = new StringBuilder();
+        Seller seller = (Seller) currentUser;
+        for (Store aStore : seller.getYourStores()) {
+            result.append(aStore.getStoreName()).append(":");
+            for (Product aProduct : aStore.getProducts()) {
+                result.append(aProduct.getProductName()).append(":").append(aProduct.getSales()).append("$");
             }
         }
-        result.append("$All Product Statistics");
+        result.append("All Product Statistics");
 
         return result.toString();
     }
-    public boolean removeProduct(String storeName,String productName)
-    {
+
+    public boolean removeProduct(String storeName, String productName) {
         boolean found = false;
         Store removeStore = null;
         Product removeProduct = null;
-        Seller seller =(Seller) currentUser;
+        Seller seller = (Seller) currentUser;
         for (Store wantedStore : seller.getYourStores()) {
             if (wantedStore.getStoreName().equals(storeName)) {
                 removeStore = wantedStore;
@@ -386,10 +382,11 @@ public class Marketplace {
 
         return true;
     }
-    public  boolean addProduct(String storeName,String productName, String description,int quantity,double price) throws IOException {
+
+    public boolean addProduct(String storeName, String productName, String description, int quantity, double price) throws IOException {
         Product product = new Product(productName, description,
                 quantity, price, storeName);
-        Seller seller =(Seller) currentUser;
+        Seller seller = (Seller) currentUser;
         for (Store wantedStore : seller.getYourStores()) {
             if (wantedStore.getStoreName().equals(storeName)) {
                 wantedStore.getProducts().add(product);
@@ -419,50 +416,48 @@ public class Marketplace {
         for (Product product : this.products) {
             if (product.getProductName().toLowerCase().
                     contains(ProductName.toLowerCase())) {
-                return  currentCustomer.purchaseProduct(this, product, quantity);
+                return currentCustomer.purchaseProduct(this, product, quantity);
 
             }
 
         }
         return false;
     }
-    public String search(String productName)
-    {
+
+    public String search(String productName) {
         Customer currentCustomer = (Customer) currentUser;
         StringBuilder result = new StringBuilder();
         ArrayList<Product> matchingProducts = currentCustomer.searchProducts(products, productName);
         for (Product product : matchingProducts) {
-            result.append("Store: ").append(product.getProductStoreName()).append("$");
-            result.append("Product: ").append(product.getProductName()).append("$");
-            result.append("Price: ").append(product.getPrice()).append("$");
-            result.append("Quantity: ").append(product.getQuantity()).append("$");
-            result.append("------------------").append("$");
+            result.append(product.getProductStoreName()).append(":");
+            result.append(product.getProductName()).append(":");
+            result.append(product.getPrice()).append(":");
+            result.append("$");
         }
         result.append("All matching products");
         return result.toString();
     }
-    public String viewPurchases()
-    {
+
+    public String viewPurchases() {
         Customer currentCustomer = (Customer) currentUser;
         StringBuilder result = new StringBuilder();
         for (Product product : currentCustomer.getPurchasedItems()) {
-            result.append("Store: ").append(product.getProductStoreName()).append("$");
-            result.append("Product: ").append(product.getProductName()).append("$");
-            result.append("Price: ").append(product.getPrice()).append("$");
-            result.append("Quantity: ").append(product.getQuantity()).append("$");
-            result.append("------------------").append("$");
+            result.append(product.getProductStoreName()).append(":");
+            result.append(product.getProductName()).append(":");
+            result.append(product.getPrice()).append(":");
+            result.append("$");
         }
+        result.append("All purchases");
         return result.toString();
     }
-    public String view()
-    {
+
+    public String view() {
         StringBuilder result = new StringBuilder();
         for (Product product : this.products) {
-            result.append("Store: ").append(product.getProductStoreName()).append("$");
-            result.append("Product: ").append(product.getProductName()).append("$");
-            result.append("Price: ").append(product.getPrice()).append("$");
-            result.append("Quantity: ").append(product.getQuantity()).append("$");
-            result.append("------------------").append("$");
+            result.append(product.getProductStoreName()).append(":");
+            result.append(product.getProductName()).append(":");
+            result.append(product.getPrice()).append(":");
+            result.append("$");
         }
         result.append("All products");
         return result.toString();
