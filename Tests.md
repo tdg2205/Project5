@@ -3,8 +3,8 @@ TESTS CASES
 -----
 Test 1. Seller Create Account
 -
--1. select create account
--2. enter gentry@.mail.com for email
+1. select create account
+2. enter gentry@.mail.com for email
 3. enter teegee for username
 4. enter tyler for password
 5. select seller as role
@@ -125,39 +125,39 @@ Test 14. Customer Sort Marketplace by Quantity
 
 Test 15. Customer Search Marketplace
 -
-1.select search marketplace
-2.enter search term blue
-3.expected:nike jeans 15 dollars
-4.given:same as expected
+1. select search marketplace
+2. enter search term blue
+3. expected:nike jeans 15 dollars
+4. given:same as expected
 
 Test 16. Customer View Shopping Cart 
 -
-1.select view shopping cart.
-2.expected:nike jeans 15 quantity available2
-3.given:same as expected
+1. select view shopping cart.
+2. expected:nike jeans 15 quantity available2
+3. given:same as expected
 
 Test 17. Customer View Purchases 
 -
-1.select view purchases
-2.expected:nike jean 15
-3.given:same as expected
+1. select view purchases
+2. expected:nike jean 15
+3. given:same as expected
 
 Test 18. Seller View Sales
 -
-1.select view sales
-2.expected:see all customer purchases tyler
-3.given:same as expected
+1. select view sales
+2. expected:see all customer purchases tyler
+3. given:same as expected
 
 Test 19. Seller View Customer Statistics
 -
-1.select view statistics then customer
-2.expected:see all customer statistics tyler 1 purchase
-3.given:same as expected
+1. select view statistics then customer
+2. expected:see all customer statistics tyler 1 purchase
+3. given:same as expected
 
 
 Test 20. Seller View Product Statistics
 -
-1.select view statistics then product
-2.expected:see all product statistics jeans 1 purchase
-3.given:same as expected
+1. select view statistics then product
+2. expected:see all product statistics jeans 1 purchase
+3. given:same as expected
 
