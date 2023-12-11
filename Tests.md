@@ -28,11 +28,11 @@ Test 3. Seller Login
 
 Test 4. Seller Create Store
 -
-1.login
-2.select create store
-3.enter store name 'nike'
-4.expected: created store name nike
-5.given: same as expected
+1. login
+2. select create store
+3. enter store name 'nike'
+4. expected: created store name nike
+5. given: same as expected
 
 Test 5. Seller Add Product
 -
