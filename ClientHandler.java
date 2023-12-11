@@ -2,7 +2,14 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/**
+ * Store.java
+ * <p>
+ * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ *
+ * @author Krish Sharma and Tyler Gentry, lab sec 30
+ * @version 11 November, 2023
+ */
 public class ClientHandler implements Runnable {
 
     private final Socket clientSocket;
@@ -46,25 +53,25 @@ public class ClientHandler implements Runnable {
         switch (commandParts[0]) {
             case "login":
                 String r = login(commandParts[1], commandParts[2]);
-                if(r.equals("seller"))
+                if (r.equals("seller"))
                     result = "seller";
-                else if(r.equals("customer"))
-                    result="customer";
-                else if(r.equals("failure"))
-                    result="failure";
+                else if (r.equals("customer"))
+                    result = "customer";
+                else if (r.equals("failure"))
+                    result = "failure";
                 break;
             case "create":
                 boolean seller = false;
-                if (commandParts[4].equals("seller"))
-                    seller=true;
+                if (commandParts[4].equals("Seller"))
+                    seller = true;
                 out = createUser(commandParts[1], commandParts[2], commandParts[3], seller);
                 if (out)
-                    if(seller)
+                    if (seller)
                         result = "seller";
                     else
-                        result="customer";
+                        result = "customer";
                 else
-                    result="failure";
+                    result = "failure";
                 break;
 
             case "createstore":
@@ -74,7 +81,7 @@ public class ClientHandler implements Runnable {
             case "addproduct":
                 out = addProduct(commandParts[1], commandParts[2], commandParts[3], Integer.parseInt(commandParts[4]),
                         Double.parseDouble(commandParts[5]));
-                if(out)
+                if (out)
                     result = "Product added successfully!";
                 else
                     result = "Product not added";
@@ -118,7 +125,7 @@ public class ClientHandler implements Runnable {
                                 result = "product/quantity not available";
                             break;
                         case "add":
-                            out =  addProductToCart(commandParts[1]);
+                            out = addProductToCart(commandParts[1]);
                             if (out)
                                 result = "Product added to cart successfully!";
                             else
@@ -136,7 +143,7 @@ public class ClientHandler implements Runnable {
                     switch (commandParts[1]) {
                         case "quantity":
                             out = marketplace.sortQuantity();
-                            if(out)
+                            if (out)
                                 result = "Products sorted by quantity.";
                             else
                                 result = "No product is added";
@@ -188,39 +195,38 @@ public class ClientHandler implements Runnable {
     }
 
     private boolean buyProduct(String ProductName, int i) {
-        return marketplace.buyProduct( ProductName, i);
+        return marketplace.buyProduct(ProductName, i);
     }
 
-    private boolean editProduct(String storeName, String productName, String newproductName,String desc ,int quantity, double price)
-    {
+    private boolean editProduct(String storeName, String productName, String newproductName, String desc, int quantity, double price) {
 
-        return marketplace.editProduct(storeName,  productName,  newproductName, desc , quantity,  price);
+        return marketplace.editProduct(storeName, productName, newproductName, desc, quantity, price);
     }
 
-    private boolean removeProduct(String storename,String product)
-    {
-        return marketplace.removeProduct(storename,product);
+    private boolean removeProduct(String storename, String product) {
+        return marketplace.removeProduct(storename, product);
     }
+
     private void createStore(String storeName) {
 
         marketplace.createStore(storeName);
     }
 
 
-    private boolean addProduct(String storeName,String productName, String description, int quantity, double price) throws IOException {
+    private boolean addProduct(String storeName, String productName, String description, int quantity, double price) throws IOException {
 
-        return marketplace.addProduct(storeName,productName, description, quantity, price);
+        return marketplace.addProduct(storeName, productName, description, quantity, price);
     }
 
-    private  String productStatistics()
-    {
-        return  marketplace.productStatistics();
+    private String productStatistics() {
+        return marketplace.productStatistics();
     }
-    private String customerStatistics()
-    {
+
+    private String customerStatistics() {
 
         return marketplace.customerStatistics();
     }
+
     private String viewSales() {
 
         StringBuilder result = new StringBuilder();
@@ -304,10 +310,10 @@ public class ClientHandler implements Runnable {
 
     private boolean createUser(String email, String username, String password, boolean seller) {
 
-        return marketplace.create( email,  username, password, seller);
+        return marketplace.create(email, username, password, seller);
     }
 
     private String login(String username, String password) {
-        return marketplace.login(username,password);
+        return marketplace.login(username, password);
     }
 }
