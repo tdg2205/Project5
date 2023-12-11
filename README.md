@@ -1,7 +1,8 @@
-Project_5
+# Project_5
 Project 5 Option 3
 
 Compilation and Running
+----------------------------------------------------------------------------------------
 Open a terminal or command prompt, navigate to the directory containing your Java files, and compile them using the javac command. For instance:- javac MarketplaceServer.java
 
 To run the program write javac MarketplaceServer.java then run javac MarketplaceClient.java
@@ -10,11 +11,13 @@ The application will start. Kindly provide the necessary information as prompted
 
 
 Submitted
+----------------------------------------------------------------------------------------
 Lohit Jagarlamudi - Submitted Report on Brightspace 
 Tyler Gentry - Submitted Vocareum Workspace
 
 
-Classes and Methods:
+Classes and Methods
+----------------------------------------------------------------------------------------
 
 ClientHandler - Manages communication with a marketplace server
 
@@ -60,7 +63,7 @@ login - Performs user login.
 
 Relationship- Managing communication between the marketplace server and individual clients.
 
-
+--------------------------------------------
 
 Customer - Customer class with shopping features for a marketplace
 
@@ -84,7 +87,7 @@ searchProducts - Searches the marketplace for products matching a given search t
 
 Relationship - Interacts with Marketplace and Product classes for shopping
 
-
+--------------------------------------------
 
 Marketplace - Represents an online marketplace with various functionalities
 
@@ -126,7 +129,7 @@ view - Displays information about all products in the marketplace.
 
 Relationship - The basis of other classes.
 
-
+--------------------------------------------
 
 MarketlpaceClient - Acts as the user interface to access other classes and input commands
 
@@ -144,19 +147,19 @@ customerMenu - A menu for customer that allow the user to view marketplace, purc
 
 Relationship - Implements other main classes.
 
-
+--------------------------------------------
 
 MarketplaceServer - A server for marketplace, handles multiple clients.
 
 Relationship - To facilitate communication between the marketplace server and multiple clients.
 
-
+--------------------------------------------
 
 Product- A class that represents a product in the marketplace.
 
 Relationship- Encapsulates the properties and behaviors of a product within the marketplace.
 
-
+--------------------------------------------
 
 Seller - A class that represents seller users in the marketplace
 
@@ -172,18 +175,18 @@ editProduct - Allows a seller to edit a product by checking current products and
 
 Relationship - Used in seller section of AppInterface.
 
-
+--------------------------------------------
 
 Store - A class that represents a virtual store in the marketplace.
 
 Relationship - Store holds products, belongs to an owner, and records purchases.
 
-
+--------------------------------------------
 
 User - A class that represents a user with all neccesary attributes
 
 Relationship - Base for creation of the customer and seller
 
-
+--------------------------------------------
 
 Tests.md- Creates test cases which work as instructions to do each function in the program.
