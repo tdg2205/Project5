@@ -1,11 +1,11 @@
 import java.io.*;
 import java.util.*;
 /**
- * Store.java
+ * Marketplace.java
  * <p>
- * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ * This is a Marketplace.java class which contains all the fields, getters and setters method along with login, read user, read store, sorting methods etc.
  *
- * @author Tyler Gentry and Krish Sharma, lab sec 30
+ * @author Krish Sharma and Tyler Gentry, lab sec 30
  * @version 11 November, 2023
  */
 public class Marketplace {
