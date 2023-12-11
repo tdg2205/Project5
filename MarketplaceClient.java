@@ -57,7 +57,7 @@ class Helper
                 System.out.println("2. Price");
                 int sortChoice = s.nextInt();
                 s.nextLine();
-                //not working cant figure out why
+
                 switch (sortChoice) {
                     case 1:
                         input="sort quantity";
@@ -132,7 +132,7 @@ class Helper
                 System.out.println("Please enter the price of product for store");
                 productPrice = s.nextDouble();
                 s.nextLine();
-                input+=storeName+" "+productName+" "+productDescription+" "+productquantity+" "+productPrice;
+                input += storeName + " " + productName + " " + productDescription + " " + productquantity + " " + productPrice;
                 break;
             case 3:
                 input="removeproduct ";
