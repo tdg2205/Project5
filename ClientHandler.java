@@ -3,9 +3,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 /**
- * Store.java
+ * ClientHandler.java
  * <p>
- * This is a Store.java class which contains all the fields, getters and setters method along with increasing purchase count and updating quanity methods.
+ * This is a ClientHandler.java which is helping server in perfroming all the functions.
  *
  * @author Krish Sharma and Tyler Gentry, lab sec 30
  * @version 11 November, 2023
