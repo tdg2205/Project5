@@ -3,8 +3,8 @@ TESTS CASES
 -----
 Test 1. Seller Create Account
 -
-1. select create account
-2. enter gentry@.mail.com for email
+-1. select create account
+-2. enter gentry@.mail.com for email
 3. enter teegee for username
 4. enter tyler for password
 5. select seller as role
