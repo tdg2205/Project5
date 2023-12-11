@@ -3,7 +3,7 @@ import java.util.ArrayList;
  * Seller.java
  * <p>
  * This is a Seller.java class which contains all the fields, getters and setters method
- * with methods to edit and remove products along with a method to create stores
+ * with methods to edit and remove products.
  *
  * @author Lohit Jagarlamudi and Tyler Gentry, lab sec 30
  * @version 11 November, 2023
